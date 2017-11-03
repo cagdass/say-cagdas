@@ -19,7 +19,7 @@ let base_dir = "/usr/share/nginx/html/say-cagdas/assets/";
 let filenames = ["1.mp3", "2.mp3"];
 
 app.get('/', function (request, response) {
-    let fpath = base_dir + filenames[getIndex()];
+    let fpath = base_dir + filenames[getIndex(filenames.length)];
     let filestream = fs.createReadStream(fpath);
     filestream.on('open', function() {
         let stats = fs.statSync(fpath);
