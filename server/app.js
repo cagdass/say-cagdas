@@ -1,17 +1,29 @@
 express = require('express');
-var http = require('http');
-var path = require('path');
-var fs = require('fs');
+const http = require('http');
+const path = require('path');
+const fs = require('fs');
 
-var app = express();
+const app = express();
+
+let getIndex = function(len) {
+    let first_index = Math.floor(Math.random() * 3);
+    if (first_index < 2) {
+        return 0;
+    }
+    else {
+        return 1 + Math.floor(Math.random()*(l-1));
+    }
+}
+
+let base_dir = "/usr/share/nginx/html/say-cagdas/assets/";
+let filenames = ["1.mp3", "2.mp3"];
 
 app.get('/', function (request, response) {
-    // Change laters.
-    let fpath = "/Users/cagdas/work/side/say-cagdas/server/assets/kv.mp3";
-    var filestream = fs.createReadStream(fpath);
+    let fpath = base_dir + filenames[getIndex()];
+    let filestream = fs.createReadStream(fpath);
     filestream.on('open', function() {
-        var stats = fs.statSync(fpath);
-        var fileSizeInBytes = stats["size"];
+        let stats = fs.statSync(fpath);
+        let fileSizeInBytes = stats["size"];
         response.writeHead(200, {
             "Accept-Ranges": "bytes",
             'Content-Type': 'audio/mpeg',
@@ -21,5 +33,5 @@ app.get('/', function (request, response) {
 })
 
 app.listen(3009, function () {
-  console.log('Example app listening on port 3009!')
+  console.log('Audio file provider listening on port 3009');
 })
