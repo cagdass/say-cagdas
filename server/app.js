@@ -3,16 +3,14 @@ const http = require('http');
 const path = require('path');
 const fs = require('fs');
 var cluster = require('cluster');
-
 var numCPUs = require('os').cpus().length;
-
 const config = require("./config.js");
-
-
+const base_dir = config.tracks_dir;
+const filenames = config.tracks;
 
 let getIndex = function(len) {
-    let first_index = Math.floor(Math.random() * 3);
-    if (first_index < 2) {
+    let first_index = Math.floor(Math.random() * len+1);
+    if (first_index < len) {
         return 0;
     }
     else {
@@ -20,12 +18,7 @@ let getIndex = function(len) {
     }
 }
 
-let base_dir = config.tracks_dir;
-let filenames = config.tracks;
-
-
 if (cluster.isMaster) {
-  // Fork workers.
   for (var i = 0; i < numCPUs; i++) {
     cluster.fork();
   }
@@ -52,8 +45,7 @@ if (cluster.isMaster) {
       d.setTime(d.getTime() + d.getTimezoneOffset()*60*1000 );
       console.log(`Serving file: ${fpath}. Request from ${ip} Time ${d}`);
 
-      filestream.on('open', function() {ls
-
+      filestream.on('open', function() {
           let stats = fs.statSync(fpath);
           let fileSizeInBytes = stats["size"];
           response.writeHead(200, {
