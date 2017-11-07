@@ -27,9 +27,16 @@ app.use(function(req, res, next) {
 });
 
 app.get('/', function (request, response) {
+    let ip = request.headers['x-forwarded-for'] ||
+      request.connection.remoteAddress ||
+      request.socket.remoteAddress ||
+      request.connection.socket.remoteAddress;
     let fpath = base_dir + filenames[getIndex(filenames.length)];
     let filestream = fs.createReadStream(fpath);
-    console.log(`Serving file: ${fpath}`);
+    var d = new Date();
+    d.setTime(d.getTime() + d.getTimezoneOffset()*60*1000 );
+    console.log(`Serving file: ${fpath}. Request from ${ip} Time ${d}`);
+
     filestream.on('open', function() {
         let stats = fs.statSync(fpath);
         let fileSizeInBytes = stats["size"];
