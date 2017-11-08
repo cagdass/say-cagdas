@@ -10,8 +10,8 @@ const base_dir = config.tracks_dir;
 const port = config.port;
 
 let getIndex = function(len) {
-  let first_index = Math.floor(Math.random() * len+1);
-  if (first_index < len) {
+  let first_index = Math.floor(Math.random() * 5);
+  if (first_index < 2) {
     return 0;
   }
   else {
@@ -47,16 +47,16 @@ if (cluster.isMaster) {
       d.setTime(d.getTime() + d.getTimezoneOffset()*60*1000 );
       console.log(`Serving file: ${fpath}. Request from ${ip} Time ${d}`);
       filestream.on('open', function() {
-        let stats = fs.statSync(fpath);
-        let fileSizeInBytes = stats["size"];
-        response.writeHead(200, {
-          "Accept-Ranges": "bytes",
-          'Content-Type': 'audio/mpeg',
-          'Content-Length': fileSizeInBytes});
-        filestream.pipe(response);
+        let stats = fs.stat(fpath, (err, stats) => {
+          let fileSizeInBytes = stats["size"];
+          response.writeHead(200, {
+            "Accept-Ranges": "bytes",
+            'Content-Type': 'audio/mpeg',
+            'Content-Length': fileSizeInBytes});
+          filestream.pipe(response);
+        });
       });
     })
-
   })
 
   app.listen(port, function () {
