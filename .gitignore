@@ -2,7 +2,7 @@
 *.mp3
 *package-lock.json
 *DS_Store
-assets
+*assets*
 
 # Logs
 logs
