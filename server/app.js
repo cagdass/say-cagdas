@@ -47,7 +47,7 @@ if (cluster.isMaster) {
       d.setTime(d.getTime() + d.getTimezoneOffset()*60*1000 );
       console.log(`Serving file: ${fpath}. Request from ${ip} Time ${d}`);
       filestream.on('open', function() {
-        let stats = fs.stat(fpath, (err, stats) => {
+        fs.stat(fpath, (err, stats) => {
           let fileSizeInBytes = stats["size"];
           response.writeHead(200, {
             "Accept-Ranges": "bytes",
