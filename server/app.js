@@ -8,7 +8,6 @@ var numCPUs = require('os').cpus().length;
 const config = require("./config.js");
 const base_dir = config.tracks_dir;
 const port = config.port;
-const fs = require('fs');
 
 let getIndex = function(len) {
   let first_index = Math.floor(Math.random() * len+1);
@@ -62,6 +61,6 @@ if (cluster.isMaster) {
   })
 
   app.listen(port, function () {
-    console.log('Audio file provider listening on port 3009');
+    console.log(`Audio file provider listening on port ${port}`);
   })
 }
