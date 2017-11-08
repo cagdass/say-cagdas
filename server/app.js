@@ -4,18 +4,20 @@ const path = require('path');
 const fs = require('fs');
 var cluster = require('cluster');
 var numCPUs = require('os').cpus().length;
+
 const config = require("./config.js");
 const base_dir = config.tracks_dir;
-const filenames = config.tracks;
+const port = config.port;
+const fs = require('fs');
 
 let getIndex = function(len) {
-    let first_index = Math.floor(Math.random() * len+1);
-    if (first_index < len) {
-        return 0;
-    }
-    else {
-        return 1 + Math.floor(Math.random()*(len-1));
-    }
+  let first_index = Math.floor(Math.random() * len+1);
+  if (first_index < len) {
+    return 0;
+  }
+  else {
+    return 1 + Math.floor(Math.random()*(len-1));
+  }
 }
 
 if (cluster.isMaster) {
@@ -35,10 +37,11 @@ if (cluster.isMaster) {
   });
 
   app.get('/', function (request, response) {
-      let ip = request.headers['x-forwarded-for'] ||
-        request.connection.remoteAddress ||
-        request.socket.remoteAddress ||
-        request.connection.socket.remoteAddress;
+    let ip = request.headers['x-forwarded-for'] ||
+      request.connection.remoteAddress ||
+      request.socket.remoteAddress ||
+      request.connection.socket.remoteAddress;
+    fs.readdir(base_dir, (err, filenames) => {
       let fpath = base_dir + filenames[getIndex(filenames.length)];
       let filestream = fs.createReadStream(fpath);
       var d = new Date();
@@ -46,17 +49,19 @@ if (cluster.isMaster) {
       console.log(`Serving file: ${fpath}. Request from ${ip} Time ${d}`);
 
       filestream.on('open', function() {
-          let stats = fs.statSync(fpath);
-          let fileSizeInBytes = stats["size"];
-          response.writeHead(200, {
-              "Accept-Ranges": "bytes",
-              'Content-Type': 'audio/mpeg',
-              'Content-Length': fileSizeInBytes});
-          filestream.pipe(response);
+        let stats = fs.statSync(fpath);
+        let fileSizeInBytes = stats["size"];
+        response.writeHead(200, {
+          "Accept-Ranges": "bytes",
+          'Content-Type': 'audio/mpeg',
+          'Content-Length': fileSizeInBytes});
+        filestream.pipe(response);
       });
+    })
+
   })
 
-  app.listen(3009, function () {
+  app.listen(port, function () {
     console.log('Audio file provider listening on port 3009');
   })
 }
