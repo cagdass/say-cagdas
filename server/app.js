@@ -1,5 +1,6 @@
 express = require('express');
 const http = require('http');
+const https = require('https');
 const path = require('path');
 const fs = require('fs');
 var bodyParser = require('body-parser');
@@ -69,6 +70,11 @@ app.post('/', function (request, response) {
   }
 })
 
-app.listen(port, function () {
-  console.log(`Audio file provider listening on port ${port}`);
-})
+var options = {
+  key: fs.readFileSync(config.key),
+  cert: fs.readFileSync(config.cert),
+};
+
+var server = https.createServer(options, app).listen(port, function(){
+  console.log('Honorable app listening on port ' + port);
+});

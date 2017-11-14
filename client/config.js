@@ -1,5 +1,5 @@
 const config = {
-    server_url: "http://cgds.me",
+    server_url: "https://cgds.me",
     server_port: 3010
 }
 
