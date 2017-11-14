@@ -1,27 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { render } from 'react-dom';
-import { AppBar, MenuItem, IconMenu, IconButton, TextField, DropDownMenu } from 'material-ui';
-import RaisedButton from 'material-ui/RaisedButton';
-import {deepOrange500} from 'material-ui/styles/colors';
-
-
-import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
-import { getMuiTheme, lightBaseTheme, MuiThemeProvider } from 'material-ui/styles';
-import Background, { appendMuiBackground, dark, light } from 'material-ui-background';
 
 import config from "../../config.js";
 
 const server_url = config.server_url;
 const server_port = config.server_port;
 const url = server_url + ":" + server_port;
-const color = light;
-
-const buttonStyle = {
-  margin: 12,
-};
 
 var AudioContext = window.AudioContext || window.webkitAudioContext;
-var context = new AudioContext();
+const context = new AudioContext()
 
 const mainDivStyle = {
   display: 'flex',
@@ -70,7 +57,6 @@ class Main extends Component {
 
   render() {
     return (
-      <MuiThemeProvider>
         <div className="Track"
           style={mainDivStyle}>
           <br />
@@ -81,12 +67,13 @@ class Main extends Component {
           <div>
             {this.props.title}
           </div>
-          <RaisedButton
-            style={buttonStyle}
-            label="Say Çağdaş"
-            onClick={this.play.bind(this)} />
+            <button
+                style={{padding: 10, fontSize: 24, fontFamily: 'comic sans ms'}}
+                onClick={this.play.bind(this)}>
+                Say Çağdaş
+            </button>
         </div>
-      </MuiThemeProvider>
+
     );
   }
 }

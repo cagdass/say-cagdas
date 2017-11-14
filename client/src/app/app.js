@@ -7,4 +7,4 @@ import Main from "../components/main";
 
 injectTapEventPlugin();
 
-render(<Router routes={routes} history={browserHistory}/>, document.getElementById("app"));
+render(<Router routes={routes} history={hashHistory}/>, document.getElementById("app"));
